@@ -35,7 +35,7 @@ def respond(payload, status=200):
     return make_response(jsonify(payload), status)
 
 
-@conference.route('/', methods=['POST'])
+@conference.route('', methods=['POST'])
 def conference_create():
     # Jicofo sends data as x-www-form-urlencoded with fields "name", "start_time", "mail_owner"
     room_name = request.form.get('name')  # short name of the conference room(not full MUC address)
@@ -55,7 +55,7 @@ def conference_create():
     )
 
     if result.status == ENUM_CREATION_STATUS.OK:
-        return respond(status=200, payload=result.info.to_json())
+        return respond(status=200, payload=result.info.to_dict())
     elif result.status == ENUM_CREATION_STATUS.ALREADY_EXIST:
         return respond(status=409, payload={
             'conflict_id': result.info.conflict_id,
@@ -67,17 +67,17 @@ def conference_create():
         })
 
 
-@conference.route('/<int:conflict_id>', methods=['GET'])
+@conference.route('<int:conflict_id>', methods=['GET'])
 def conference_get(conflict_id):
     info = service.get_conference(conflict_id=conflict_id)
 
     if info:
-        return respond(status=200, payload=info.to_json())
+        return respond(status=200, payload=info.to_dict())
     else:
         return respond(status=404, payload={'message': 'unknown conference'})
 
 
-@conference.route('/<int:conflict_id>', methods=['DELETE'])
+@conference.route('<int:conflict_id>', methods=['DELETE'])
 def conference_delete(conflict_id):
     try:
         service.delete_conference(conflict_id=conflict_id)

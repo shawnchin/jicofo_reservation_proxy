@@ -79,9 +79,6 @@ def conference_get(conflict_id):
 
 @conference.route('<int:conflict_id>', methods=['DELETE'])
 def conference_delete(conflict_id):
-    # NOTE: due to existing bug (https://github.com/jitsi/jicofo/issues/39) this endpoint may not be called after all
-    #       users leave meeting despite what it says in the docs. Until that is fixed, this will only be called on
-    #       on expiry.
     try:
         service.delete_conference(conflict_id=conflict_id)
     except:

@@ -68,13 +68,19 @@ class ServiceBase(object):
         return None
 
 
+#  Store meeting data at module level so they persists across flask requests.
+GLOBAL_MEETINGS = {}  # store meeting info indexed by conflict_id
+GLOBAL_ID_MAPS = {}  # maps roomName to conflict_id
+GLOBAL_USED_IDS = set()  # keeps track of used conflict_id so we can always generate a unique one
+
+
 class DummyService(ServiceBase):
     DURATION = 6 * 3600  # Let meetings run for up to 6 hours
 
     def __init__(self):
-        self.meetings = {}  # store meeting info indexed by conflict_id
-        self.id_map = {}  # maps roomName to conflict_id
-        self.used_ids = set()  # keeps track of used conflict_id so we can always generate a unique one
+        self.meetings = GLOBAL_MEETINGS
+        self.id_map = GLOBAL_ID_MAPS
+        self.used_ids = GLOBAL_USED_IDS
 
     def create_conference(self, room_name, start_time, mail_owner):
         conflict_id = self.id_map.get(room_name)
@@ -108,7 +114,7 @@ class DummyService(ServiceBase):
             start_time=start_time,
             duration=self.DURATION,
         )
-        self.meetings[conflict_id] = conflict_id
+        self.meetings[conflict_id] = info
         self.id_map[room_name] = conflict_id
 
         return info

@@ -1,3 +1,6 @@
+# :warning: This project is now deprecated
+ Jicofo Reservation Proxy has been replaced by the [prosody version](https://github.com/jitsi/jitsi-meet/blob/master/resources/prosody-plugins/mod_reservations.lua) which addresses many of the issues that gave rise to this project.
+
 # Jicofo Reservation Proxy
 
 A small flask app that accepts calls from 
